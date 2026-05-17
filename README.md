@@ -25,17 +25,29 @@ Once installed, any Claude-powered tool understands:
 
 ## Install
 
-### One-line (Mac / Linux)
+### Option 1 — Git clone (recommended, easy to update)
 
+**Mac / Linux**
 ```bash
 git clone https://github.com/hussainaljabri/platformscode-skill ~/.claude/skills/platformscode
 ```
 
-### One-line (Windows PowerShell)
-
+**Windows PowerShell**
 ```powershell
 git clone https://github.com/hussainaljabri/platformscode-skill "$env:USERPROFILE\.claude\skills\platformscode"
 ```
+
+### Option 2 — Manual download (no git required)
+
+1. Click **Code → Download ZIP** on this page
+2. Extract the ZIP
+3. Rename the extracted folder to `platformscode`
+4. Move it to your Claude skills directory:
+
+| OS | Path |
+|----|------|
+| Mac / Linux | `~/.claude/skills/platformscode/` |
+| Windows | `%USERPROFILE%\.claude\skills\platformscode\` |
 
 That's it. Restart Claude Code — the skill is live.
 
