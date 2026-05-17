@@ -6,7 +6,7 @@
 
 **Design-system-accurate.** All rules extracted directly from the Figma source files and component CSS.  
 
-**Community-maintained.** Not an official DGA/SDGA product.
+**Community-maintained.** Not an official Digital Government Authority (DGA) product.
 
 ---
 
