@@ -133,6 +133,7 @@ platformscode/
 | Claude Code (CLI) | ✅ Full — place in `~/.claude/skills/platformscode/` |
 | Claude.ai (Projects) | ✅ Upload rule files as project knowledge |
 | Cursor | ✅ Place in `.cursor/rules/` and reference from `.cursorrules` |
+| OpenAI Codex CLI | ✅ Reference rule files from `AGENTS.md` in your project root |
 | GitHub Copilot | ⚠️ Partial — copy rule files into repo as `.github/copilot-instructions.md` |
 | Any AI with file context | ✅ Attach relevant `.md` files to your prompt |
 
