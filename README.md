@@ -3,7 +3,9 @@
 > A Claude Code skill that lets any AI generate UI fully compliant with the **Platforms Code** design system — the official design system of Saudi Digital Government Authority (DGA) government portals.
 
 **Framework-independent.** Works with plain HTML, React, Angular, Vue, Svelte, or any other stack.  
+
 **Design-system-accurate.** All rules extracted directly from the Figma source files and component CSS.  
+
 **Community-maintained.** Not an official DGA/SDGA product.
 
 ---
