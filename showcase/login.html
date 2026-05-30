@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Tawafoq | KSAU-HS ITS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────────────── */
+    :root {
+      /* KSAU-HS exact brand */
+      --k:       #006a44;   /* primary green */
+      --k-d:     #005236;   /* dark hover */
+      --k-l:     #007a50;   /* light variant */
+      --k-bg:    #003d28;   /* deep panel bg */
+      --k-dark:  #04100b;   /* near-black panel */
+      --gold:    #bf9d42;
+      --gold-l:  #d4b464;
+      --cream:   #fff8e7;
+
+      /* Platforms Code gov bar tokens */
+      --br-300:#6ec598; --br-400:#3dab78; --br-500:#25935f;
+      --br-600:#1f7a4f; --br-700:#196040; --br-800:#114530; --br-900:#0b3323;
+
+      /* Neutral */
+      --n0:#fff;    --n25:#fcfcfd;  --n50:#f9fafb;  --n100:#f2f4f7;
+      --n200:#e4e7ec; --n300:#d0d5dd; --n400:#98a2b3; --n500:#667085;
+      --n600:#475467; --n700:#344054; --n800:#1d2939; --n900:#101828;
+
+      --red-25:#fff5f5; --red-600:#dc2626; --red-700:#b91c1c;
+      --blue-600:#2563eb;
+
+      --bg-page:#f1f4f2;
+      --border:#e4e7ec; --border2:#d0d5dd;
+      --field-b:#d0d5dd; --field-bh:#98a2b3;
+      --text:#101828; --text-2:#475467; --text-3:#667085; --text-ph:#98a2b3;
+
+      --r-xs:2px; --r-sm:4px; --r-md:8px; --r-lg:16px; --r-full:9999px;
+      --sh-md:0 2px 4px -2px rgba(16,24,40,.08),0 6px 14px -4px rgba(16,24,40,.12);
+      --sh-lg:0 4px 6px -2px rgba(16,24,40,.04),0 14px 20px -4px rgba(16,24,40,.1);
+      --sh-xl:0 8px 10px -4px rgba(16,24,40,.04),0 24px 32px -4px rgba(16,24,40,.12);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────────────── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:100%;-webkit-text-size-adjust:100%;height:100%}
+    body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:15px;
+         line-height:1.6;color:var(--text);background:var(--bg-page);
+         min-height:100vh;display:flex;flex-direction:column}
+    @media(max-width:768px){body{font-size:16px}}
+    button{font-family:inherit;cursor:pointer}
+
+    /* ─── GOV STAMP ──────────────────────────────────────────────────── */
+    #gov-stamp{background:var(--br-800);border-bottom:1px solid var(--br-700);
+               position:sticky;top:0;z-index:300}
+    #gov-stamp.dismissed{display:none}
+    .gs-bar{max-width:1400px;margin-inline:auto;padding:6px 24px;
+            display:flex;align-items:center;gap:16px}
+    .gs-emblem{width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .gs-text{flex:1;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+    .gs-official{font:600 11px/18px "IBM Plex Sans Arabic";color:#fff;
+                 display:flex;align-items:center;gap:8px}
+    .gs-official i{width:6px;height:6px;border-radius:50%;background:var(--br-300);flex-shrink:0;font-style:normal}
+    .gs-verify-btn{background:transparent;border:none;cursor:pointer;
+                   font:400 11px/18px "IBM Plex Sans Arabic";color:rgba(255,255,255,.65);
+                   display:flex;align-items:center;gap:4px;padding:0;transition:color .15s}
+    .gs-verify-btn:hover{color:#fff}
+    .gs-verify-btn svg{transition:transform .25s}
+    .gs-verify-btn.open svg{transform:rotate(180deg)}
+    #gs-panel{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);
+              background:var(--br-900);border-top:1px solid rgba(255,255,255,.07)}
+    #gs-panel.open{max-height:220px}
+    .gs-inner{max-width:1400px;margin-inline:auto;padding:16px 24px;
+              display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .gs-tip{display:flex;gap:12px}
+    .gs-tip-ic{width:30px;height:30px;border-radius:var(--r-md);
+               background:rgba(255,255,255,.08);flex-shrink:0;
+               display:flex;align-items:center;justify-content:center;color:var(--br-300)}
+    .gs-tip-t{font:600 12px/18px "IBM Plex Sans Arabic";color:#fff}
+    .gs-tip-d{font:400 11px/16px "IBM Plex Sans Arabic";color:rgba(255,255,255,.55);margin-top:2px}
+    .gs-close{background:transparent;border:none;cursor:pointer;
+              color:rgba(255,255,255,.45);display:flex;align-items:center;
+              padding:4px;border-radius:2px;transition:color .15s,background .15s}
+    .gs-close:hover{color:#fff;background:rgba(255,255,255,.1)}
+
+    /* ─── COOKIE BANNER — fixed bottom ──────────────────────────────── */
+    #cookie-banner{
+      position:fixed;bottom:0;left:0;right:0;z-index:200;
+      background:#0a1a12;color:#fff;
+      border-top:1px solid rgba(0,106,68,.5);
+      box-shadow:0 -8px 32px rgba(0,0,0,.3);
+      transform:translateY(105%);
+      transition:transform .5s cubic-bezier(.4,0,.2,1);
+    }
+    #cookie-banner.visible{transform:translateY(0)}
+    #cookie-banner.dismissed{transform:translateY(105%);pointer-events:none}
+
+    /* Main strip */
+    .cb-strip{
+      max-width:1400px;margin-inline:auto;
+      padding:12px 24px;
+      display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    }
+    .cb-icon{width:36px;height:36px;border-radius:var(--r-md);
+             background:rgba(0,106,68,.3);display:flex;align-items:center;
+             justify-content:center;flex-shrink:0}
+    .cb-copy{flex:1;min-width:220px}
+    .cb-copy strong{font:600 13px/20px "IBM Plex Sans Arabic";display:block}
+    .cb-copy span{font:400 12px/18px "IBM Plex Sans Arabic";color:rgba(255,255,255,.65)}
+    .cb-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .cb-btn{height:34px;padding-inline:16px;border-radius:var(--r-sm);border:0;
+            font:500 12px/20px "IBM Plex Sans Arabic";cursor:pointer;
+            display:inline-flex;align-items:center;gap:6px;transition:background .15s,opacity .15s}
+    .cb-btn--accept{background:var(--k);color:#fff}
+    .cb-btn--accept:hover{background:var(--k-l)}
+    .cb-btn--manage{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85)}
+    .cb-btn--manage:hover{background:rgba(255,255,255,.18)}
+    .cb-btn--x{background:transparent;color:rgba(255,255,255,.45);
+               width:32px;height:32px;padding:0;justify-content:center;border-radius:var(--r-sm)}
+    .cb-btn--x:hover{background:rgba(255,255,255,.1);color:#fff}
+
+    /* Manage panel — slides up above strip */
+    #cb-manage{
+      max-height:0;overflow:hidden;
+      transition:max-height .4s cubic-bezier(.4,0,.2,1);
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+    #cb-manage.open{max-height:260px}
+    .cb-manage-inner{
+      max-width:1400px;margin-inline:auto;padding:20px 24px;
+    }
+    .cb-manage-title{font:600 13px/20px "IBM Plex Sans Arabic";color:#fff;margin-bottom:14px}
+    .cb-cookies-row{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;
+    }
+    .cb-cookie{
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--r-md);padding:12px;
+    }
+    .cb-cookie-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    .cb-cookie-name{font:600 12px/18px "IBM Plex Sans Arabic";color:#fff}
+    .cb-cookie-desc{font:400 11px/16px "IBM Plex Sans Arabic";color:rgba(255,255,255,.5)}
+    .cb-always{font:500 10px/14px "IBM Plex Sans Arabic";color:rgba(0,210,120,.7);margin-top:6px}
+
+    /* Toggle switch */
+    .cb-toggle{
+      width:36px;height:20px;border-radius:var(--r-full);
+      background:rgba(255,255,255,.2);cursor:pointer;position:relative;
+      border:none;flex-shrink:0;transition:background .2s;
+    }
+    .cb-toggle.on{background:var(--k)}
+    .cb-toggle.always{opacity:.5;cursor:not-allowed}
+    .cb-toggle::after{
+      content:"";width:16px;height:16px;border-radius:50%;
+      background:#fff;position:absolute;top:2px;left:2px;
+      transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);
+    }
+    .cb-toggle.on::after{transform:translateX(16px)}
+
+    .cb-manage-footer{display:flex;gap:10px}
+
+    /* ─── PAGE SHELL ─────────────────────────────────────────────────── */
+    .page{display:flex;flex:1;min-height:0}
+
+    /* ─── LEFT — BRAND PANEL ─────────────────────────────────────────── */
+    .brand{
+      width:50%;
+      background:#005236;
+      position:relative;overflow:hidden;
+      display:flex;flex-direction:column;
+      padding:52px 56px;
+    }
+
+    /* Single clean radial at top-right — subtle presence only */
+    .brand::before{
+      content:"";position:absolute;
+      top:-120px;right:-100px;
+      width:560px;height:560px;
+      background:radial-gradient(circle, rgba(0,106,68,.55) 0%, transparent 65%);
+      pointer-events:none;
+    }
+
+    /* Faint dot-grid texture */
+    .brand::after{
+      content:"";position:absolute;inset:0;
+      background-image:radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size:28px 28px;
+      pointer-events:none;
+    }
+
+    /* Thin gold line at top */
+    .brand-topline{
+      position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .brand-content{position:relative;z-index:2;flex:1;display:flex;flex-direction:column}
+
+    /* Logo */
+    .brand-logo{ margin-bottom:56px; }
+    .logo-bg{
+      height:80px;
+      border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      padding:8px;
+    }
+    .logo-bg img{ height:100%;width:auto;object-fit:contain }
+
+    /* Main heading */
+    .brand-main{flex:1;display:flex;flex-direction:column;justify-content:center}
+    .brand-tag{
+      font:500 11px/18px "IBM Plex Sans Arabic";
+      color:var(--gold);letter-spacing:.8px;text-transform:uppercase;
+      margin-bottom:18px;display:flex;align-items:center;gap:8px;
+    }
+    .brand-tag::before{content:"";width:20px;height:1px;background:var(--gold)}
+    .brand-h1{
+      font:700 38px/50px "IBM Plex Sans Arabic";
+      color:#fff;margin-bottom:20px;
+      letter-spacing:-.6px;
+    }
+    .brand-h1 span{color:var(--gold)}
+    .brand-p{
+      font:400 15px/26px "IBM Plex Sans Arabic";
+      color:rgba(255,255,255,.55);
+      max-width:380px;margin-bottom:32px;
+    }
+
+    /* Arabic vision quote */
+    .vision-quote{
+      padding:16px 20px;
+      border-inline-start:2px solid var(--gold);
+      background:rgba(255,255,255,.03);
+      border-radius:0 var(--r-md) var(--r-md) 0;
+      max-width:400px;
+    }
+    .vision-quote p{
+      font:400 14px/26px "IBM Plex Sans Arabic";
+      color:rgba(255,255,255,.6);
+      direction:rtl;text-align:right;
+    }
+    .vision-quote cite{
+      font:500 11px/18px "IBM Plex Sans Arabic";
+      color:rgba(191,157,66,.6);
+      display:block;margin-top:6px;text-align:right;direction:rtl;font-style:normal;
+    }
+
+    /* Stats */
+    .brand-stats{
+      display:flex;gap:0;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:28px;margin-top:32px;
+      position:relative;z-index:2;
+    }
+    .bs{flex:1;padding-inline-end:24px}
+    .bs+.bs{padding-inline-start:24px;border-inline-start:1px solid rgba(255,255,255,.08)}
+    .bs:last-child{padding-inline-end:0}
+    .bs-n{font:700 22px/30px "IBM Plex Sans Arabic";color:var(--gold)}
+    .bs-l{font:400 11px/16px "IBM Plex Sans Arabic";color:rgba(255,255,255,.45);margin-top:2px}
+
+    /* ─── RIGHT — FORM PANEL ─────────────────────────────────────────── */
+    .form-side{
+      flex:1;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:48px 40px;background:var(--bg-page);
+      overflow-y:auto;position:relative;
+    }
+
+    /* Lang toggle */
+    .lang-bar{
+      position:absolute;top:24px;right:24px;
+      display:flex;align-items:center;
+      background:#fff;border:1px solid var(--border2);
+      border-radius:var(--r-full);padding:3px;gap:2px;
+    }
+    .lang-btn{
+      height:28px;padding-inline:14px;border:none;
+      border-radius:var(--r-full);cursor:pointer;
+      font:500 13px/18px "IBM Plex Sans Arabic";
+      color:var(--text-3);background:transparent;
+      transition:background .15s,color .15s;
+    }
+    .lang-btn.on{background:var(--k);color:#fff}
+
+    /* Card */
+    .card{
+      width:100%;max-width:400px;
+      background:#fff;
+      border-radius:20px;
+      box-shadow:var(--sh-xl);
+      overflow:hidden;
+      animation:rise .4s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+    /* Card top bar — KSAU green accent */
+    .card-topbar{height:4px;background:linear-gradient(90deg,var(--k),var(--gold) 60%,var(--k-l))}
+
+    /* User-type selector */
+    .type-bar{
+      display:flex;align-items:center;gap:4px;
+      padding:14px 24px 0;
+      border-bottom:1px solid var(--n100);
+      background:var(--n25);
+    }
+    .type-btn{
+      flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+      padding:10px 4px 11px;border:none;background:transparent;cursor:pointer;
+      min-height:44px; /* touch target */
+      font:500 12px/18px "IBM Plex Sans Arabic";color:var(--text-3);
+      border-bottom:2px solid transparent;margin-bottom:-1px;
+      transition:color .2s,border-color .2s;
+    }
+    .type-btn .ic{
+      width:28px;height:28px;border-radius:var(--r-md);
+      background:var(--n100);color:var(--n400);
+      display:flex;align-items:center;justify-content:center;
+      transition:background .2s,color .2s;
+    }
+    .type-btn:hover{color:var(--text-2)}
+    .type-btn:hover .ic{background:rgba(0,106,68,.08);color:var(--k)}
+    .type-btn.on{color:var(--k);border-bottom-color:var(--k)}
+    .type-btn.on .ic{background:rgba(0,106,68,.1);color:var(--k)}
+
+    /* Card body */
+    .card-body{padding:28px 28px 20px}
+
+    .card-heading{font:700 22px/30px "IBM Plex Sans Arabic";color:var(--text);margin-bottom:3px}
+    .card-sub{font:400 13px/20px "IBM Plex Sans Arabic";color:var(--text-3);margin-bottom:24px}
+
+    /* Error */
+    .error-bar{
+      display:flex;gap:10px;align-items:flex-start;
+      padding:10px 14px;margin-bottom:16px;
+      background:#fff5f5;border:1px solid rgba(220,38,38,.15);
+      border-radius:var(--r-md);border-inline-start:3px solid var(--red-600);
+      font:400 12px/18px "IBM Plex Sans Arabic";color:var(--red-700);
+      animation:shake .25s ease;
+    }
+    @keyframes shake{0%,100%{transform:none}30%{transform:translateX(-5px)}70%{transform:translateX(5px)}}
+
+    /* Fields */
+    .field{margin-bottom:16px}
+    .f-label{font:500 12px/18px "IBM Plex Sans Arabic";color:var(--n700);
+             display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+    .f-link{font:400 12px/18px "IBM Plex Sans Arabic";color:var(--k);cursor:pointer}
+    .f-link:hover{text-decoration:underline}
+
+    .f-wrap{position:relative}
+    .f-input{
+      width:100%;height:46px;
+      padding-inline:16px;padding-inline-end:46px;
+      border-radius:var(--r-md);
+      border:1.5px solid var(--field-b);
+      background:#fff;color:var(--text);
+      font:400 14px/20px "IBM Plex Sans Arabic";outline:none;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .f-input::placeholder{color:var(--text-ph)}
+    .f-input:hover{border-color:var(--field-bh)}
+    .f-input:focus{border-color:var(--k);box-shadow:0 0 0 3px rgba(0,106,68,.22);outline:none}
+    .f-input:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+    .f-input.err{border-color:var(--red-600)}
+    .f-input.err:focus{box-shadow:0 0 0 3px rgba(220,38,38,.08)}
+
+    .f-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);
+            color:var(--text-ph);display:flex;align-items:center}
+    .f-icon.btn{cursor:pointer;transition:color .15s;padding:4px;margin-right:-4px}
+    .f-icon.btn:hover{color:var(--text-3)}
+
+    /* Remember row */
+    .remember-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .cb-label{display:flex;align-items:center;gap:8px;cursor:pointer;
+              font:400 14px/20px "IBM Plex Sans Arabic";color:var(--text-2);user-select:none}
+    .cb-square{
+      width:17px;height:17px;border-radius:3px;
+      border:1.5px solid var(--border2);
+      display:flex;align-items:center;justify-content:center;
+      background:#fff;flex-shrink:0;
+      transition:background .15s,border-color .15s;
+    }
+    .cb-square.on{background:var(--k);border-color:var(--k)}
+
+    /* Sign-in button */
+    .sign-btn{
+      width:100%;height:46px;border:none;border-radius:var(--r-md);
+      background:var(--k);color:#fff;
+      font:600 15px/22px "IBM Plex Sans Arabic";cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      box-shadow:0 4px 16px rgba(0,106,68,.3);
+      transition:background .15s,box-shadow .15s,transform .1s;
+      position:relative;overflow:hidden;
+    }
+    .sign-btn::after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
+    }
+    .sign-btn:hover{background:var(--k-d);box-shadow:0 6px 22px rgba(0,106,68,.4)}
+    .sign-btn:active{transform:scale(.99)}
+    .sign-btn:disabled{background:var(--n200);color:var(--text-ph);box-shadow:none;cursor:not-allowed}
+    .sign-btn:disabled::after{display:none}
+    .spin{width:18px;height:18px;border-radius:50%;
+          border:2px solid rgba(255,255,255,.25);border-top-color:#fff;
+          animation:spin .65s linear infinite;display:none}
+    .sign-btn.loading .spin{display:block}
+    .sign-btn.loading .btn-text{display:none}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* OR row */
+    .or{display:flex;align-items:center;gap:14px;margin:18px 0}
+    .or-l{flex:1;height:1px;background:var(--n100)}
+    .or-t{font:400 11px/18px "IBM Plex Sans Arabic";color:var(--text-ph);white-space:nowrap}
+
+    /* Absher button */
+    .absher{
+      width:100%;height:44px;border-radius:var(--r-md);
+      border:1.5px solid var(--border2);background:#fff;color:var(--text);
+      display:flex;align-items:center;gap:12px;
+      cursor:pointer;font:500 14px/20px "IBM Plex Sans Arabic";
+      transition:border-color .2s,background .2s,box-shadow .2s;
+    }
+    .absher:hover{border-color:rgba(0,106,68,.35);background:rgba(0,106,68,.02);
+                  box-shadow:0 2px 10px rgba(0,106,68,.1)}
+    .absher-ic{width:40px;height:100%;border-radius:var(--r-sm);
+               background:var(--k);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .absher svg.arr{margin-inline-start:auto;color:var(--n300)}
+
+    /* Card footer */
+    .card-foot{
+      padding:14px 28px 20px;
+      border-top:1px solid var(--n100);text-align:center;
+    }
+    .card-foot p{font:400 12px/18px "IBM Plex Sans Arabic";color:var(--text-3)}
+    .card-foot a{color:var(--k);font-weight:600;cursor:pointer}
+    .card-foot a:hover{text-decoration:underline}
+
+    /* Help links */
+    .help{display:flex;align-items:center;gap:20px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+    .help a{font:400 12px/18px "IBM Plex Sans Arabic";color:var(--n400);cursor:pointer;transition:color .15s}
+    .help a:hover{color:var(--k)}
+    .h-dot{width:3px;height:3px;border-radius:50%;background:var(--n200)}
+
+    /* Footer */
+    .foot{background:var(--k-dark);border-top:1px solid rgba(191,157,66,.12);
+          padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .foot-c{font:400 11px/18px "IBM Plex Sans Arabic";color:rgba(255,255,255,.3)}
+    .foot-l{display:flex;align-items:center;gap:20px}
+    .foot-l a{font:400 11px/18px "IBM Plex Sans Arabic";color:rgba(255,255,255,.35);cursor:pointer;transition:color .15s}
+    .foot-l a:hover{color:rgba(255,255,255,.7);text-decoration:underline}
+
+    /* Toast */
+    #toasts{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+    .toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;
+           box-shadow:0 12px 28px rgba(0,0,0,.18);
+           font:500 13px/18px "IBM Plex Sans Arabic";max-width:300px;
+           animation:toast-in .3s cubic-bezier(.4,0,.2,1) both}
+    .toast-ok{background:var(--k-d);color:#fff}
+    .toast-err{background:#b91c1c;color:#fff}
+    .toast-info{background:#0a1a12;color:rgba(255,255,255,.9)}
+    @keyframes toast-in{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .brand{display:none}
+      .form-side{padding:32px 20px}
+      .card{max-width:100%}
+      .gs-inner{grid-template-columns:1fr}
+      .cb-cookies-row{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:480px){
+      .type-btn .lbl{display:none}
+      .card-body{padding:20px 20px 16px}
+      .cb-cookies-row{grid-template-columns:1fr}
+    }
+
+    /* Focus rings — visible for keyboard nav (WCAG 2.4.7) */
+    .sign-btn:focus-visible,.absher:focus-visible,.type-btn:focus-visible,
+    .lang-btn:focus-visible,.cb-btn:focus-visible,.f-link:focus-visible{
+      outline:3px solid var(--k);outline-offset:2px;
+    }
+    .f-input:focus-visible{outline:3px solid var(--k);outline-offset:0}
+
+    /* prefers-reduced-motion — disable all animations (UI/UX rule) */
+    @media(prefers-reduced-motion:reduce){
+      *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+        transition-duration:.01ms!important}
+      .card{animation:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ GOV VERIFICATION STAMP ════════════════════════════════════ -->
+<div id="gov-stamp" role="banner" aria-label="Official government website">
+  <div class="gs-bar">
+    <div class="gs-emblem" aria-hidden="true">
+      <svg viewBox="0 0 28 28" fill="none" width="26" height="26">
+        <circle cx="14" cy="14" r="12.5" stroke="rgba(110,197,152,.35)" stroke-width="1"/>
+        <line x1="14" y1="21" x2="14" y2="10" stroke="#6ec598" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M14 12C11 9 8 10 7 8"  stroke="#6ec598" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+        <path d="M14 12C17 9 20 10 21 8" stroke="#6ec598" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+        <path d="M14 14C11 12 9 13 7 12" stroke="#6ec598" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+        <path d="M14 14C17 12 19 13 21 12"stroke="#6ec598" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+        <line x1="8"  y1="22" x2="20" y2="18" stroke="#6ec598" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="20" y1="22" x2="8"  y2="18" stroke="#6ec598" stroke-width="1.1" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="gs-text">
+      <div class="gs-official">
+        <i></i>
+        An official website of the Saudi Government &nbsp;·&nbsp; موقع حكومي رسمي للمملكة العربية السعودية
+      </div>
+      <button class="gs-verify-btn" id="gs-toggle" onclick="toggleStamp()" aria-expanded="false">
+        Here's how you know
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+    <button class="gs-close" onclick="document.getElementById('gov-stamp').classList.add('dismissed')" aria-label="Dismiss">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="gs-panel">
+    <div class="gs-inner">
+      <div class="gs-tip"><div class="gs-tip-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div><div class="gs-tip-t">Official .gov.sa domain</div><div class="gs-tip-d">Saudi government sites always use a <strong style="color:var(--br-300)">.gov.sa</strong> domain.</div></div></div>
+      <div class="gs-tip"><div class="gs-tip-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div><div class="gs-tip-t">Secure HTTPS</div><div class="gs-tip-d">A <strong style="color:var(--br-300)">padlock</strong> and <strong style="color:var(--br-300)">https://</strong> mean your connection is encrypted.</div></div></div>
+      <div class="gs-tip"><div class="gs-tip-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div><div><div class="gs-tip-t">NCA Digital Trust Seal</div><div class="gs-tip-d">All official portals carry the <strong style="color:var(--br-300)">NCA digital trust seal</strong>.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COOKIES BANNER — fixed bottom ════════════════════════════ -->
+<div id="cookie-banner" role="complementary" aria-label="Cookie consent">
+
+  <!-- Manage panel (slides up first) -->
+  <div id="cb-manage">
+    <div class="cb-manage-inner">
+      <div class="cb-manage-title">إدارة تفضيلات ملفات الارتباط — Manage Cookie Preferences</div>
+      <div class="cb-cookies-row">
+        <div class="cb-cookie">
+          <div class="cb-cookie-head">
+            <span class="cb-cookie-name">Strictly Necessary</span>
+            <button class="cb-toggle on always" disabled aria-label="Always active"></button>
+          </div>
+          <p class="cb-cookie-desc">Required for the site to function. Cannot be switched off.</p>
+          <div class="cb-always">Always Active</div>
+        </div>
+        <div class="cb-cookie">
+          <div class="cb-cookie-head">
+            <span class="cb-cookie-name">Performance</span>
+            <button class="cb-toggle" id="t-perf" onclick="toggleCk(this)" aria-label="Toggle performance cookies"></button>
+          </div>
+          <p class="cb-cookie-desc">Help us understand how visitors use the portal to improve it.</p>
+        </div>
+        <div class="cb-cookie">
+          <div class="cb-cookie-head">
+            <span class="cb-cookie-name">Functional</span>
+            <button class="cb-toggle on" id="t-func" onclick="toggleCk(this)" aria-label="Toggle functional cookies"></button>
+          </div>
+          <p class="cb-cookie-desc">Enable personalisation and enhanced features.</p>
+        </div>
+        <div class="cb-cookie">
+          <div class="cb-cookie-head">
+            <span class="cb-cookie-name">Targeting</span>
+            <button class="cb-toggle" id="t-targ" onclick="toggleCk(this)" aria-label="Toggle targeting cookies"></button>
+          </div>
+          <p class="cb-cookie-desc">Used to measure relevance of communications.</p>
+        </div>
+      </div>
+      <div class="cb-manage-footer">
+        <button class="cb-btn cb-btn--manage" onclick="rejectAll()">Reject All — رفض الكل</button>
+        <button class="cb-btn cb-btn--accept" onclick="confirmCk()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Confirm My Choices — تأكيد خياراتي
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strip -->
+  <div class="cb-strip">
+    <div class="cb-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.8">
+        <path d="M12 2a10 10 0 1 0 10 10c0-.5-.1-1-.2-1.5A3 3 0 0 1 18 7a3 3 0 0 1-3-3 3 3 0 0 1-.5-3A10 10 0 0 0 12 2z"/>
+        <circle cx="7.5" cy="11.5" r="1.5" fill="rgba(255,255,255,.85)" stroke="none"/>
+        <circle cx="12"  cy="16"   r="1"   fill="rgba(255,255,255,.85)" stroke="none"/>
+        <circle cx="15"  cy="11"   r="1"   fill="rgba(255,255,255,.85)" stroke="none"/>
+      </svg>
+    </div>
+    <div class="cb-copy">
+      <strong>ملفات تعريف الارتباط — Cookies</strong>
+      <span>هذا الموقع يستخدم ملفات تعريف الارتباط للتأكد من سهولة الاستخدام وتحسين تجربتك.</span>
+    </div>
+    <div class="cb-actions">
+      <button class="cb-btn cb-btn--manage" onclick="toggleCkManage()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 0 4.93 19.07"/></svg>
+        Manage
+      </button>
+      <button class="cb-btn cb-btn--accept" onclick="acceptAll()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Accept All
+      </button>
+      <button class="cb-btn cb-btn--x" onclick="hideCk()" aria-label="Dismiss">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ PAGE ══════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- LEFT — BRAND ───────────────────────────────────────────── -->
+  <aside class="brand" aria-hidden="true">
+    <div class="brand-topline"></div>
+    <div class="brand-content">
+
+      <!-- Logo only — SVG contains emblem + text internally -->
+      <div class="brand-logo">
+        <div class="logo-bg">
+          <img
+            src="https://ksau-hs.edu.sa/_catalogs/masterpage/NewKSAUPortal/assets/images/WebP%20Logo.webp"
+            alt="King Saud bin Abdulaziz University for Health Sciences"
+            loading="eager"
+            onerror="this.closest('.logo-bg').innerHTML='<svg viewBox=\'0 0 56 56\' width=\'56\' height=\'56\'><rect x=\'21\' y=\'6\' width=\'14\' height=\'44\' rx=\'3\' fill=\'%23006a44\'/><rect x=\'6\' y=\'21\' width=\'44\' height=\'14\' rx=\'3\' fill=\'%23006a44\'/><circle cx=\'28\' cy=\'28\' r=\'6\' fill=\'%23bf9d42\'/></svg>'"
+          />
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <div class="brand-main">
+        <div class="brand-tag">موقع تجربة - Test Login Page</div>
+        <h1 class="brand-h1">Everyday Operations<br/><span>& Monitoring Portal</span></h1>
+        <p class="brand-p">This Page was generated to demonstrate the use of Platforms Code Skill Developed by Engr. Hussain Aljabri.</p>
+
+        <!-- Arabic vision -->
+        <div class="vision-quote">
+          <p>منصة تجريبية لتطبيق مهارة مدمجة مع الذكاء الاصطناعي كلاود كود</p>
+          <cite>تطوير المهندس حسين الجابري — Engr. Hussain Aljabri</cite>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="brand-stats">
+        <div class="bs"><div class="bs-n">40+</div><div class="bs-l">Workflows</div></div>
+        <div class="bs"><div class="bs-n">3</div><div class="bs-l">Servers</div></div>
+        <div class="bs"><div class="bs-n">99.9%</div><div class="bs-l">Uptime SLA</div></div>
+        <div class="bs"><div class="bs-n">Team</div><div class="bs-l">Managed</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT — FORM ───────────────────────────────────────────── -->
+  <main class="form-side">
+
+    <div class="lang-bar" role="group" aria-label="Language">
+      <button class="lang-btn on" id="l-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn"    id="l-ar" onclick="setLang('ar')">AR</button>
+    </div>
+
+    <div class="card" role="main">
+      <div class="card-topbar"></div>
+
+      <!-- User type -->
+      <!-- No role tabs — Tawafoq is a single enterprise application for ITS -->
+      <div style="display:flex;align-items:center;gap:14px;padding:18px 24px 0;background:var(--n25);border-bottom:1px solid var(--n100)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(0,106,68,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--k)" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div style="padding-bottom:18px">
+          <div style="font:600 13px/18px 'IBM Plex Sans Arabic';color:var(--text)">موقع تجربة - Test Login Page</div>
+          <div style="font:400 12px/18px 'IBM Plex Sans Arabic';color:var(--text-3)">Everyday Operations & Monitoring</div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <h2 class="card-heading" id="c-heading">Sign In</h2>
+        <p  class="card-sub"    id="c-sub">Use your Organization network credentials to access</p>
+
+        <div class="error-bar hidden" id="c-err">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red-600)" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="c-err-t">Invalid credentials. Please try again.</span>
+        </div>
+
+        <div class="field">
+          <label class="f-label" for="f-id"><span id="c-id-lbl">User ID</span></label>
+          <div class="f-wrap">
+            <input class="f-input" type="text" id="f-id" placeholder="Enter your user ID" autocomplete="username"/>
+            <div class="f-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-label" for="f-pw">
+            <span>Password</span>
+            <a class="f-link" onclick="showForgot()" tabindex="0" id="c-forgot">Forgot password?</a>
+          </label>
+          <div class="f-wrap">
+            <input class="f-input" type="password" id="f-pw" placeholder="Enter your password" autocomplete="current-password"/>
+            <button class="f-icon btn" type="button" id="pw-toggle" onclick="togglePw()"
+              aria-label="Show password" aria-controls="f-pw">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" id="eye-svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="remember-row">
+          <label class="cb-label" onclick="toggleRem()">
+            <div class="cb-square" id="rem-box">
+              <svg id="rem-check" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span id="c-keep">Keep me signed in</span>
+          </label>
+        </div>
+
+        <button class="sign-btn" id="sign-btn" onclick="doLogin()">
+          <div class="spin"></div>
+          <span class="btn-text" id="c-signin-txt">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+        </button>
+
+        <div class="or">
+          <div class="or-l"></div>
+          <div class="or-t" id="c-or">or continue with</div>
+          <div class="or-l"></div>
+        </div>
+
+        <button class="absher" onclick="doAbsher()">
+          <div class="absher-ic">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3L4 20h4l1.5-4h5L16 20h4L12 3z" fill="#fff" opacity=".9"/>
+              <line x1="7.5" y1="13" x2="16.5" y2="13" stroke="var(--k)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <span>Absher — أبشر &nbsp;(National ID)</span>
+          <svg class="arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="card-foot">
+        <p>Need access? <a onclick="toast('Contact ITS: itsupport@ksau-hs.edu.sa','info')" id="c-req">Request access</a></p>
+      </div>
+    </div>
+
+    <nav class="help">
+      <a onclick="toast('IT Help: 1900-KSAU','info')">IT Support</a>
+      <div class="h-dot"></div>
+      <a onclick="toast('Opening privacy policy…','info')">Privacy Policy</a>
+      <div class="h-dot"></div>
+      <a onclick="toast('Opening accessibility statement…','info')">Accessibility</a>
+      <div class="h-dot"></div>
+      <a href="https://ksau-hs.edu.sa" target="_blank" rel="noopener">University Site</a>
+    </nav>
+
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="foot-c">© 2026 توافق — Tawafoq · Developed by Enterprise Applications Team, KSAU-HS ITS</div>
+  <div class="foot-l">
+    <a onclick="toast('IT: itsupport@ksau-hs.edu.sa','info')">IT Support</a>
+    <a href="https://ksau-hs.edu.sa" target="_blank" rel="noopener">University Website</a>
+  </div>
+</footer>
+
+<div id="toasts"></div>
+
+<script>
+/* ── Gov stamp ──────────────────────────────────────────────── */
+function toggleStamp(){
+  const p=document.getElementById('gs-panel');
+  const b=document.getElementById('gs-toggle');
+  const o=p.classList.contains('open');
+  p.classList.toggle('open',!o);
+  b.classList.toggle('open',!o);
+  b.setAttribute('aria-expanded',String(!o));
+}
+
+/* ── Cookie banner ──────────────────────────────────────────── */
+function toggleCk(el){ el.classList.toggle('on'); }
+
+function toggleCkManage(){
+  document.getElementById('cb-manage').classList.toggle('open');
+}
+
+function acceptAll(){
+  hideCk();
+  toast('Cookie preferences saved — شكرًا!','ok');
+}
+
+function rejectAll(){
+  ['t-perf','t-targ'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  hideCk();
+  toast('Non-essential cookies rejected.','info');
+}
+
+function confirmCk(){
+  hideCk();
+  toast('Your cookie preferences have been saved.','ok');
+}
+
+function hideCk(){
+  const cb=document.getElementById('cookie-banner');
+  cb.classList.remove('visible');
+  cb.classList.add('dismissed');
+  document.getElementById('cb-manage').classList.remove('open');
+}
+
+/* ── Language (simplified — no role tabs for enterprise app) ─── */
+const T={
+  en:{
+    heading:'Sign In',
+    sub:'Sign in to manage approvals, committees, and meetings',
+    idLabel:'Network Username',idPh:'e.g. jsmith or 443123456',
+    signin:'Sign In',or:'or continue with',keep:'Keep me signed in',
+    forgot:'Forgot password?',req:'Request access',
+  },
+  ar:{
+    heading:'تسجيل الدخول',
+    sub:'سجّل دخولك لإدارة الموافقات واللجان والاجتماعات',
+    idLabel:'اسم المستخدم',idPh:'مثال: jsmith أو ٤٤٣١٢٣٤٥٦',
+    signin:'دخول',or:'أو الدخول بواسطة',keep:'إبقاء تسجيل الدخول',
+    forgot:'نسيت كلمة المرور؟',req:'طلب صلاحية',
+  }
+};
+let lang='en';
+
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.getElementById('l-en').classList.toggle('on',l==='en');
+  document.getElementById('l-ar').classList.toggle('on',l==='ar');
+  render();
+}
+
+function render(){
+  const c=T[lang];
+  document.getElementById('c-heading').textContent=c.heading;
+  document.getElementById('c-sub').textContent=c.sub;
+  document.getElementById('c-id-lbl').textContent=c.idLabel;
+  document.getElementById('f-id').placeholder=c.idPh;
+  document.getElementById('c-signin-txt').innerHTML=
+    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>${c.signin}`;
+  document.getElementById('c-or').textContent=c.or;
+  document.getElementById('c-keep').textContent=c.keep;
+  document.getElementById('c-forgot').textContent=c.forgot;
+  document.getElementById('c-req').textContent=c.req;
+}
+
+/* ── Password ───────────────────────────────────────────────── */
+let pwVis=false;
+function togglePw(){
+  pwVis=!pwVis;
+  document.getElementById('f-pw').type=pwVis?'text':'password';
+  document.getElementById('eye-svg').style.opacity=pwVis?'.4':'1';
+}
+
+/* ── Remember ───────────────────────────────────────────────── */
+let rem=false;
+function toggleRem(){
+  rem=!rem;
+  document.getElementById('rem-box').classList.toggle('on',rem);
+  document.getElementById('rem-check').style.display=rem?'block':'none';
+}
+
+/* ── Login ──────────────────────────────────────────────────── */
+function doLogin(){
+  const id=document.getElementById('f-id').value.trim();
+  const pw=document.getElementById('f-pw').value;
+  const btn=document.getElementById('sign-btn');
+  const err=document.getElementById('c-err');
+
+  ['f-id','f-pw'].forEach(i=>document.getElementById(i).classList.remove('err'));
+  err.classList.add('hidden');
+
+  if(!id||!pw){
+    if(!id) document.getElementById('f-id').classList.add('err');
+    if(!pw) document.getElementById('f-pw').classList.add('err');
+    document.getElementById('c-err-t').textContent=
+      lang==='ar'?'يرجى تعبئة جميع الحقول المطلوبة':'Please fill in all required fields.';
+    err.classList.remove('hidden');return;
+  }
+
+  btn.classList.add('loading');btn.disabled=true;
+  setTimeout(()=>{
+    btn.classList.remove('loading');btn.disabled=false;
+    if(id.toLowerCase()==='wrong'||pw==='wrong'){
+      document.getElementById('c-err-t').textContent=
+        lang==='ar'?'بيانات الدخول غير صحيحة. يرجى المحاولة مرة أخرى.':'Invalid credentials. Please check your details.';
+      err.classList.remove('hidden');
+      ['f-id','f-pw'].forEach(i=>document.getElementById(i).classList.add('err'));
+    } else {
+      toast(lang==='ar'?'تم تسجيل الدخول بنجاح!':'Signed in! Redirecting…','ok');
+      setTimeout(()=>{window.location.href='approvaldashboard.html';},1800);
+    }
+  },1500);
+}
+
+function doAbsher(){
+  toast(lang==='ar'?'جارٍ الاتصال بأبشر…':'Connecting to Absher…','info');
+}
+function showForgot(){
+  toast(lang==='ar'?'راسل: itsupport@ksau-hs.edu.sa':'Contact IT: itsupport@ksau-hs.edu.sa','info');
+}
+
+/* ── Toast ──────────────────────────────────────────────────── */
+function toast(msg,type='info'){
+  const c=document.getElementById('toasts');
+  const el=document.createElement('div');
+  const cls={ok:'toast-ok',err:'toast-err',info:'toast-info'}[type]||'toast-info';
+  el.className='toast '+cls;
+  const ic={ok:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+            err:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+            info:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'}[type]||'';
+  el.innerHTML=ic+`<span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(20px)';el.style.transition='all .3s';setTimeout(()=>el.remove(),300);},3800);
+}
+
+/* ── Init ───────────────────────────────────────────────────── */
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('cookie-banner').classList.add('visible'),1000);
+});
+</script>
+</body>
+</html>
