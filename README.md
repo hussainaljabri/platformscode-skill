@@ -11,7 +11,7 @@
 > A Claude Code skill that lets any AI generate UI fully compliant with the **Platforms Code** design system — the official design system of Saudi Digital Government Authority (DGA) government portals.
 
 **Author:** [Hussain Al-Jabri](https://www.linkedin.com/in/engr-hussain-aljabri-a7305718b/) — Enterprise Applications Specialist · Saudi Arabia · [GitHub](https://github.com/hussainaljabri)  
-**Based on:** [Platforms Code](https://www.figma.com/@sdga) by Saudi Digital Government Authority (SDGA / هيئة الحكومة الرقمية) — the mandated design standard for Saudi government portals under Vision 2030.  
+**Based on:** [Platforms Code](https://design.dga.gov.sa/) by Saudi Digital Government Authority (SDGA / هيئة الحكومة الرقمية) — the mandated design standard for Saudi government portals under Vision 2030.  
 **Status:** Community-maintained. Not an official SDGA/DGA product. — مجتمعي المصدر، غير رسمي وليس تابع لهيئة الحكومة الرقمية.
 
 ---
