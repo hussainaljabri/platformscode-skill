@@ -1,11 +1,18 @@
 # Platforms Code — Claude Code Skill
 
+![Version](https://img.shields.io/badge/version-v1.0.0-1f7a4f?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
+![Status](https://img.shields.io/badge/status-community%20maintained-orange?style=flat-square)
+![Based on](https://img.shields.io/badge/based%20on-Platforms%20Code%20%E2%80%94%20SDGA-006a44?style=flat-square)
+![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-8b5cf6?style=flat-square)
+![RTL](https://img.shields.io/badge/RTL-supported-informational?style=flat-square)
+![Frameworks](https://img.shields.io/badge/frameworks-HTML%20%7C%20React%20%7C%20Vue%20%7C%20Angular%20%7C%20Svelte-344054?style=flat-square)
+
 > A Claude Code skill that lets any AI generate UI fully compliant with the **Platforms Code** design system — the official design system of Saudi Digital Government Authority (DGA) government portals.
 
 **Author:** [Hussain Al-Jabri](https://www.linkedin.com/in/engr-hussain-aljabri-a7305718b/) — Enterprise Applications Specialist · Saudi Arabia · [GitHub](https://github.com/hussainaljabri)  
 **Based on:** [Platforms Code](https://www.figma.com/@sdga) by Saudi Digital Government Authority (SDGA / هيئة الحكومة الرقمية) — the mandated design standard for Saudi government portals under Vision 2030.  
-**Status:** Community-maintained. Not an official SDGA/DGA product. — مجتمعي المصدر، غير رسمي وليس تابع لهيئة الحكومة الرقمية.  
-**Version:** `v1.0.0`
+**Status:** Community-maintained. Not an official SDGA/DGA product. — مجتمعي المصدر، غير رسمي وليس تابع لهيئة الحكومة الرقمية.
 
 ---
 
