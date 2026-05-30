@@ -3,7 +3,7 @@
 ![Version](https://img.shields.io/badge/version-v1.0.0-1f7a4f?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 ![Status](https://img.shields.io/badge/status-community%20maintained-orange?style=flat-square)
-![Based on](https://img.shields.io/badge/based%20on-Platforms%20Code%20%E2%80%94%20SDGA-006a44?style=flat-square)
+[![Platforms Code](https://img.shields.io/badge/Platforms%20Code-v1.0-006a44?style=flat-square)](https://design.dga.gov.sa/)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-8b5cf6?style=flat-square)
 ![RTL](https://img.shields.io/badge/RTL-supported-informational?style=flat-square)
 ![Frameworks](https://img.shields.io/badge/frameworks-HTML%20%7C%20React%20%7C%20Vue%20%7C%20Angular%20%7C%20Svelte-344054?style=flat-square)
