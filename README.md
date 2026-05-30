@@ -4,7 +4,8 @@
 
 **Author:** [Hussain Al-Jabri](https://www.linkedin.com/in/engr-hussain-aljabri-a7305718b/) — Software Engineer · Saudi Arabia · [GitHub](https://github.com/hussainaljabri)  
 **Based on:** [Platforms Code](https://www.figma.com/@sdga) by Saudi Digital Government Authority (SDGA / هيئة الحكومة الرقمية) — the mandated design standard for Saudi government portals under Vision 2030.  
-**Status:** Community-maintained. Not an official SDGA/DGA product. — مجتمعي المصدر، غير رسمي وليس تابع لهيئة الحكومة الرقمية.
+**Status:** Community-maintained. Not an official SDGA/DGA product. — مجتمعي المصدر، غير رسمي وليس تابع لهيئة الحكومة الرقمية.  
+**Version:** `v1.0.0`
 
 ---
 
@@ -237,6 +238,17 @@ git pull
 Pull requests welcome. Each rule file is self-contained Markdown — edit the relevant file, open a PR.
 
 If you find a token, component, or page template missing from the Figma source files, open an issue with the Figma link and we'll add a rule file.
+
+---
+
+## Changelog
+
+### v1.0.0 — 2026-05-30
+Initial release.
+- 30 rule files covering all design tokens, components, page templates, and required sections
+- Government Verification Stamp and Cookies Banner specs included and enforced
+- Full RTL/Arabic support
+- Compatible with Claude Code, Cursor, OpenAI Codex CLI, Claude.ai Projects, and GitHub Copilot
 
 ---
 
