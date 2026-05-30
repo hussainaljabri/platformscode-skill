@@ -2,11 +2,17 @@
 
 > A Claude Code skill that lets any AI generate UI fully compliant with the **Platforms Code** design system — the official design system of Saudi Digital Government Authority (DGA) government portals.
 
+**Author:** [Hussain Al-Jabri](https://www.linkedin.com/in/engr-hussain-aljabri-a7305718b/) — Software Engineer · Saudi Arabia · [GitHub](https://github.com/hussainaljabri)  
+**Based on:** [Platforms Code](https://www.figma.com/@sdga) by Saudi Digital Government Authority (SDGA / هيئة الحكومة الرقمية) — the mandated design standard for Saudi government portals under Vision 2030.  
+**Status:** Community-maintained. Not an official SDGA/DGA product. — مجتمعي المصدر، غير رسمي وليس تابع لهيئة الحكومة الرقمية.
+
+---
+
 **Framework-independent.** Works with plain HTML, React, Angular, Vue, Svelte, or any other stack.  
 
 **Design-system-accurate.** All rules extracted directly from the Figma source files and component CSS.  
 
-**Community-maintained.** Not an official Digital Government Authority (DGA) product.
+**Open source.** MIT licensed — free to use, adapt, and contribute.
 
 ---
 
@@ -141,20 +147,66 @@ platformscode/
 
 ## What "Platforms Code compliant" means
 
-Every page this skill generates enforces:
+Compliance is not just visual — it covers typography, color discipline, layout stacking, and accessibility. Here is what the skill enforces and why each rule exists.
 
-| Rule | Value |
-|------|-------|
-| Font | IBM Plex Sans Arabic |
-| Primary brand color | `#1f7a4f` (`--colors-primary-sa-flag-600`) |
-| Colors | CSS custom properties only — never hardcoded |
-| Interactive radius | `4px` (`--radius-sm`) |
-| Container radius | `8px` (`--radius-md`) |
-| Card radius | `16px` (`--radius-lg`) |
-| Gov Stamp | First element in `<body>`, `position: sticky; top: 0; z-index: 300` |
-| Cookies Banner | `position: fixed; bottom: 0; z-index: 200` — slides up |
-| Header | `position: sticky; top` set dynamically via `recalcLayout()` |
-| RTL | `dir="rtl"` on root triggers automatic mirroring |
+### Typography — IBM Plex Sans Arabic only
+
+Every element uses `font-family: "IBM Plex Sans Arabic", sans-serif`. This is the only approved typeface — it covers both Latin and Arabic scripts in one face, ensuring consistent weight and spacing across bilingual content. Using system fonts, Tajawal, or Cairo breaks brand consistency.
+
+### Color — Saudi green via CSS tokens, never hardcoded
+
+```css
+/* ✅ correct */
+color: var(--colors-primary-sa-flag-600);   /* #1f7a4f */
+background: var(--background-primary);
+
+/* ❌ wrong */
+color: #1f7a4f;
+background: #ffffff;
+color: green;
+```
+
+Token names are the contract. Hardcoded values break theming, dark mode, and future design updates. The only approved primary brand color is `#1f7a4f` — never a different green, blue, or teal.
+
+### Border radius — by element type
+
+The radius is not one-size-fits-all. Each level signals a different type of element:
+
+| Element type | Radius | Token |
+|---|---|---|
+| Buttons, inputs, badges | `4px` | `--radius-sm` |
+| Panels, sections, dropdowns | `8px` | `--radius-md` |
+| Cards, modals, sheets | `16px` | `--radius-lg` |
+
+Using `8px` on a button or `4px` on a card is visually off and breaks the design language hierarchy.
+
+### Page stacking — gov stamp, cookies banner, header
+
+Every full-page template has a strict three-layer stack. Getting this wrong causes elements to overlap or hide behind each other:
+
+```
+z-index: 300 │ Government Verification Stamp  ← position: sticky; top: 0
+             │   (first element in <body>, always)
+z-index: 200 │ Cookies Banner                 ← position: fixed; bottom: 0
+             │   (slides up from bottom, never top)
+z-index:  99 │ Site Header (72px)             ← position: sticky; top: {stamp height}px
+             │   (top set dynamically by recalcLayout(), not hardcoded)
+             │ Page content
+```
+
+`recalcLayout()` measures the stamp's rendered height on load and on resize and sets the header's `top` accordingly. This matters because the stamp can expand (showing verification tips) or be dismissed — both change its height.
+
+### RTL and Arabic
+
+Adding `dir="rtl"` to the root `<html>` element is sufficient. Flex and grid layouts mirror automatically. Logical CSS properties (`margin-inline-start`, `padding-inline-end`) are used throughout so no manual `left`/`right` flipping is needed.
+
+```html
+<!-- LTR (default) -->
+<html lang="en">
+
+<!-- RTL / Arabic -->
+<html lang="ar" dir="rtl">
+```
 
 ---
 
@@ -177,16 +229,6 @@ The rules are **pure Markdown** — no runtime, no dependencies, no build step. 
 cd ~/.claude/skills/platformscode
 git pull
 ```
-
----
-
-## Source
-
-Design specifications extracted from:
-- [Platforms Code Figma community files](https://www.figma.com/@sdga) — Saudi Digital Government Authority
-- `@platformscode/core` npm package component CSS
-
-This skill is **not** affiliated with or endorsed by DGA/SDGA. It is a community tool to help developers build compliant UIs faster.
 
 ---
 
