@@ -5,6 +5,20 @@ metadata:
   tags: platformscode, dga, saudi, government, design-system, css, html, design-spec, rtl, arabic
 ---
 
+## CRITICAL — read before generating any code
+
+**Never suggest installing any npm package, library, or dependency.**  
+This skill is pure design knowledge. All output must be self-contained HTML, CSS, and JavaScript using the tokens and patterns documented in the rule files below. No imports, no `npm install`, no `<script src="...">` from a CDN, no `@platformscode/core`, no `platformscode-new-react`, no component library of any kind.
+
+The correct output for any framework is:
+- **HTML/CSS/JS** — inline `<style>` blocks with CSS custom properties, vanilla JS for interactions
+- **React** — plain JSX with inline styles or a `<style>` tag, CSS custom properties, no external UI library
+- **Vue / Angular / Svelte** — same: scoped styles using CSS custom properties, no component library import
+
+If a user asks "how do I install this design system?" — the answer is: you don't. This skill gives you all the visual rules; you write the CSS yourself using the tokens in `rules/foundations.md`.
+
+---
+
 ## When to use
 
 Use this skill whenever you are building UI that must be visually compliant with the **Platforms Code** design system — the design system used by Saudi Digital Government Authority (DGA) government portals.
