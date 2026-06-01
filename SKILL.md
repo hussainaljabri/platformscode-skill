@@ -19,6 +19,30 @@ If a user asks "how do I install this design system?" — the answer is: you don
 
 ---
 
+## Pre-flight — ask this before generating anything
+
+Before writing a single line of code, ask the user about their color palette. Do not skip this step, even if the user gave a detailed prompt.
+
+Ask exactly this:
+
+> **Before I start — what's your color situation?**
+>
+> **A)** I have a primary brand color (give me the hex and I'll build a full palette around it)  
+> **B)** I have a specific palette or range of colors I want to use (share them)  
+> **C)** No preference — generate something that fits the page/brand context
+
+Then handle the response as follows:
+
+| Answer | What to do |
+|--------|-----------|
+| **A — single color given** | Derive a full palette: use the provided color as the `600` step, generate lighter tints (`25` → `300`) and darker shades (`700` → `950`) by adjusting lightness/saturation. Map these to `--colors-primary-*` tokens. Keep Saudi green (`#1f7a4f`) for the gov stamp and cookies banner regardless — those are mandatory government elements, not brand elements. |
+| **B — palette or range given** | Use exactly what the user provided. Map their colors to the nearest token steps. Do not override or "correct" their palette. Still keep Saudi green only for the gov stamp and cookies banner. |
+| **C — no preference** | Generate a purposeful palette that fits the page type and context (e.g., a healthcare portal gets calm blues and greens, a national day page gets gold and deep green). Pick one anchor color, derive the full scale from it, and briefly tell the user what you chose and why before generating. |
+
+**Exception:** If the user explicitly says "use Platforms Code default colors" or "use Saudi green" — skip the question and proceed with `#1f7a4f` as the primary.
+
+---
+
 ## When to use
 
 Use this skill whenever you are building UI that must be visually compliant with the **Platforms Code** design system — the design system used by Saudi Digital Government Authority (DGA) government portals.
